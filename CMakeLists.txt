@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.16.3)
 
-project(hello_cmake)
+# We always want to cross-compile for ARM
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/toolchain.arm-none-eabi-gcc.cmake)
 
 enable_language(C ASM)
-
-# TODO: might need to change these :)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
+
+project(hello_cmake)
 
 set(PROJECT_FILES
     src/main.c)
@@ -45,10 +46,10 @@ set_source_files_properties(${STM32CUBEF7_FILES}
     COMPILE_FLAGS -Wno-unused-parameter)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
-
 add_executable(${EXECUTABLE} ${PROJECT_FILES}
                              ${STM32CUBEMX_GENERATED_FILES}
                              ${STM32CUBEF7_FILES})
+
 
 target_compile_definitions(${EXECUTABLE} PRIVATE
     -DUSE_HAL_DRIVER
@@ -92,6 +93,7 @@ target_link_options(${EXECUTABLE} PRIVATE
     -Wl,-Map=${PROJECT_NAME}.map,--cref
     -Wl,--gc-sections
     -Wl,--print-memory-usage)
+
 
 add_custom_command(TARGET ${EXECUTABLE}
     POST_BUILD
