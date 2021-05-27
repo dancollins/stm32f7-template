@@ -15,7 +15,6 @@ set(PROJECT_FILES
 set(STM32CUBEMX_GENERATED_FILES
     src/stm/startup_stm32f746xx.s
 
-    src/stm/Src/main.c
     src/stm/Src/stm32f7xx_hal_msp.c
     src/stm/Src/stm32f7xx_it.c
     src/stm/Src/system_stm32f7xx.c
@@ -40,6 +39,10 @@ set(STM32CUBEF7_FILES
     STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c
     STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c
     STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.c)
+
+set_source_files_properties(${STM32CUBEF7_FILES}
+    PROPERTIES
+    COMPILE_FLAGS -Wno-unused-parameter)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 
@@ -67,7 +70,10 @@ target_compile_options(${EXECUTABLE} PRIVATE
     -mfloat-abi=hard
     -fdata-sections
     -ffunction-sections
+
     -Wall
+    -Werror
+    -pedantic
 
     $<$<CONFIG:Debug>:-Og>)
 
@@ -95,3 +101,6 @@ add_custom_command(TARGET ${EXECUTABLE}
     POST_BUILD
     COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
     COMMAND arm-none-eabi-objcopy -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+
+set_target_properties(${EXECUTABLE} PROPERTIES ADDITIONAL_CLEAN_FILES
+    "${PROJECT_NAME}.bin;${PROJECT_NAME}.hex;${PROJECT_NAME}.map")
