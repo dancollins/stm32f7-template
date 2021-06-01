@@ -4,14 +4,15 @@ cmake_minimum_required(VERSION 3.16.3)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/toolchain.arm-none-eabi-gcc.cmake)
 
 enable_language(C ASM)
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_C_EXTENSIONS ON)
 
 project(hello_cmake)
 
 set(PROJECT_FILES
-    src/main.c)
+    src/main.c
+    src/logging/logging.c)
 
 set(STM32CUBEMX_GENERATED_FILES
     src/stm/startup_stm32f746xx.s
@@ -74,7 +75,6 @@ target_compile_options(${EXECUTABLE} PRIVATE
 
     -Wall
     -Werror
-    -pedantic
 
     $<$<CONFIG:Debug>:-Og>)
 
@@ -87,9 +87,9 @@ target_link_options(${EXECUTABLE} PRIVATE
     -mfloat-abi=hard
 
     -specs=nano.specs
+    -specs=nosys.specs
     -lc
     -lm
-    -lnosys
     -Wl,-Map=${PROJECT_NAME}.map,--cref
     -Wl,--gc-sections
     -Wl,--print-memory-usage)
