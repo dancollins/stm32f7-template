@@ -71,17 +71,6 @@ SystemClock_Config(void)
 }
 
 
-static void
-test(void)
-{
-    LOG_ERROR("error\n");
-    LOG_WARNING("warning\n");
-    LOG_INFO("info\n");
-    LOG_DEBUG("debug\n");
-    LOG_VERBOSE("verbose\n");
-}
-
-
 int
 main(void)
 {
@@ -100,8 +89,9 @@ main(void)
     HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
 
     logging_args.config = logging_config;
-    logging_args.handler = logging_handler;
     logging_args.default_level = LOG_LEVEL_ERROR;
+    logging_args.handler = logging_handler;
+    logging_args.get_time = HAL_GetTick;
     logging_init(&logging_args);
 
     HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -111,7 +101,6 @@ main(void)
     LOG_INFO("info\n");
     LOG_DEBUG("debug\n");
     LOG_VERBOSE("verbose\n");
-    test();
 
     while (1)
     {

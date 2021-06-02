@@ -95,6 +95,20 @@ target_link_options(${EXECUTABLE} PRIVATE
     -Wl,--print-memory-usage)
 
 
+# Set up a compile-time define with each source file relative to the project
+# root directory (as opposed to the absolute file path in __FILE__).
+function(define_logging_filename target)
+  get_target_property(sources "${target}" SOURCES)
+  foreach(src ${sources})
+      string(REPLACE "${CMAKE_SOURCE_DIR}" "" logging_file "${src}")
+      set_property(SOURCE "${src}" APPEND PROPERTY
+                   COMPILE_DEFINITIONS "LOGGING_FILE=\"${logging_file}\"")
+  endforeach()
+endfunction()
+
+define_logging_filename(${EXECUTABLE})
+
+
 add_custom_command(TARGET ${EXECUTABLE}
     POST_BUILD
     COMMAND arm-none-eabi-size ${EXECUTABLE})

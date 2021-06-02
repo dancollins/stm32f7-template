@@ -17,11 +17,10 @@
  */
 static logging_config_t logging_config[] =
 {
-    {"src/main.c", NULL, LOG_LEVEL_INFO},
-    {"src/main.c", "test", LOG_LEVEL_DEBUG},
+    {"src/main.c", LOG_LEVEL_INFO},
 
     /* We detect the end using a NULL entry. */
-    {0, 0, 0}
+    {NULL, 0}
 };
 
 #endif

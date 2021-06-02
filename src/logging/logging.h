@@ -17,7 +17,6 @@ typedef enum logging_level_t
 typedef struct logging_config_t
 {
     const char *file;
-    const char *function;
     const logging_level_t level;
 } logging_config_t;
 
@@ -25,39 +24,40 @@ typedef struct logging_config_t
 typedef struct logging_init_args_t
 {
     logging_config_t *config;
-    void (*handler)(const char *message);
     logging_level_t default_level;
+    void (*handler)(const char *message);
+    unsigned long (*get_time)(void);
 } logging_init_args_t;
 
 
-#define LOG_ERROR(...) do {                             \
-        logging_log(LOG_LEVEL_ERROR,                    \
-                    __FILE__, __FUNCTION__, __LINE__,   \
-                    __VA_ARGS__);                       \
+#define LOG_ERROR(...) do {                     \
+        logging_log(LOG_LEVEL_ERROR,            \
+                    LOGGING_FILE, __LINE__,     \
+                    __VA_ARGS__);               \
     } while(0)
 
-#define LOG_WARNING(...) do {                           \
-        logging_log(LOG_LEVEL_WARNING,                  \
-                    __FILE__, __FUNCTION__, __LINE__,   \
-                    __VA_ARGS__);                       \
+#define LOG_WARNING(...) do {                   \
+        logging_log(LOG_LEVEL_WARNING,          \
+                    LOGGING_FILE, __LINE__,     \
+                    __VA_ARGS__);               \
     } while(0)
 
-#define LOG_INFO(...) do {                              \
-        logging_log(LOG_LEVEL_INFO,                     \
-                    __FILE__, __FUNCTION__, __LINE__,   \
-                    __VA_ARGS__);                       \
+#define LOG_INFO(...) do {                      \
+        logging_log(LOG_LEVEL_INFO,             \
+                    LOGGING_FILE, __LINE__,     \
+                    __VA_ARGS__);               \
     } while(0)
 
-#define LOG_DEBUG(...) do {                             \
-        logging_log(LOG_LEVEL_DEBUG,                    \
-                    __FILE__, __FUNCTION__, __LINE__,   \
-                    __VA_ARGS__);                       \
+#define LOG_DEBUG(...) do {                     \
+        logging_log(LOG_LEVEL_DEBUG,            \
+                    LOGGING_FILE, __LINE__,     \
+                    __VA_ARGS__);               \
     } while(0)
 
-#define LOG_VERBOSE(...) do {                           \
-        logging_log(LOG_LEVEL_VERBOSE,                  \
-                    __FILE__, __FUNCTION__, __LINE__,   \
-                    __VA_ARGS__);                       \
+#define LOG_VERBOSE(...) do {                   \
+        logging_log(LOG_LEVEL_VERBOSE,          \
+                    LOGGING_FILE, __LINE__,     \
+                    __VA_ARGS__);               \
     } while(0)
 
 
@@ -67,7 +67,7 @@ logging_init(logging_init_args_t *init_args);
 
 extern void
 logging_log(logging_level_t level,
-            const char *file, const char *function, int line,
+            const char *file, int line,
             const char *format, ...);
 
 
