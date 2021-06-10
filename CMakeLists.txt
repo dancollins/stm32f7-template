@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.16.3)
 
 # We always want to cross-compile for ARM
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/toolchain.arm-none-eabi-gcc.cmake)
+set(CMAKE_TOOLCHAIN_FILE
+  ${CMAKE_SOURCE_DIR}/cmake/toolchain.arm-none-eabi-gcc.cmake)
 
 enable_language(C ASM)
 set(CMAKE_C_STANDARD 11)
@@ -52,8 +53,8 @@ add_executable(${EXECUTABLE} ${PROJECT_FILES}
   ${STM32CUBEF7_FILES})
 
 
-include("logging.cmake")
-include("logging_config.cmake" OPTIONAL)
+include(${CMAKE_SOURCE_DIR}/cmake/logging.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/logging_config.cmake OPTIONAL)
 logging_set_filename(${EXECUTABLE})
 
 
