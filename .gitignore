@@ -2,6 +2,9 @@
 build/*
 src/stm/Drivers/*
 
+# Our local logging config doesn't need to be tracked.
+logging_config.cmake
+
 # Created by https://www.toptal.com/developers/gitignore/api/emacs,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=emacs,cmake
 
