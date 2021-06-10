@@ -1,12 +1,6 @@
 #include "stm32f7xx_hal.h"
 
-#include "logging/logging.h"
-
-#include <string.h>
-
-
-extern void Error_Handler(void);
-extern void assert_failed(uint8_t *file, uint32_t line);
+#include "common.h"
 
 
 static void
@@ -49,16 +43,10 @@ SystemClock_Config(void)
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
     RCC_OscInitStruct.PLL.PLLQ = 2;
 
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-    {
-        Error_Handler();
-    }
+    assert(HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK);
 
     /* Activate the Over-Drive mode. */
-    if (HAL_PWREx_EnableOverDrive() != HAL_OK)
-    {
-        Error_Handler();
-    }
+    assert(HAL_PWREx_EnableOverDrive() == HAL_OK);
 
     /* Initializes the CPU, AHB and APB busses clocks. */
     RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_HCLK |
@@ -70,10 +58,7 @@ SystemClock_Config(void)
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
-    {
-        Error_Handler();
-    }
+    assert(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) == HAL_OK);
 }
 
 
@@ -117,14 +102,13 @@ main(void)
     return 0;
 }
 
-void
-Error_Handler(void)
-{
-
-}
 
 void
-assert_failed(uint8_t *file, uint32_t line)
+panic(const char *file, int line)
 {
+    UNUSED(file);
+    UNUSED(line);
 
+    while (1)
+        ;
 }
