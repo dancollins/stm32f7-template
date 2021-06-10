@@ -1,6 +1,5 @@
 #include "stm32f7xx_hal.h"
 
-#include "config.h"
 #include "logging/logging.h"
 
 #include <string.h>
@@ -16,6 +15,13 @@ logging_handler(const char *message)
     static char buf[256];
     strncpy(buf, message, sizeof(buf) - 1);
     buf[255] = 0;
+}
+
+
+static uint32_t
+logging_get_time(void)
+{
+    return HAL_GetTick();
 }
 
 
@@ -88,10 +94,8 @@ main(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
 
-    logging_args.config = logging_config;
-    logging_args.default_level = LOG_LEVEL_ERROR;
     logging_args.handler = logging_handler;
-    logging_args.get_time = HAL_GetTick;
+    logging_args.get_time = logging_get_time;
     logging_init(&logging_args);
 
     HAL_GPIO_WritePin(GPIOI, GPIO_PIN_1, GPIO_PIN_RESET);

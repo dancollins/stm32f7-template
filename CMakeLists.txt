@@ -11,112 +11,104 @@ set(CMAKE_C_EXTENSIONS ON)
 project(hello_cmake)
 
 set(PROJECT_FILES
-    src/main.c
-    src/logging/logging.c)
+  src/main.c
+  src/logging/logging.c)
 
 set(STM32CUBEMX_GENERATED_FILES
-    src/stm/startup_stm32f746xx.s
+  src/stm/startup_stm32f746xx.s
 
-    src/stm/Src/stm32f7xx_hal_msp.c
-    src/stm/Src/stm32f7xx_it.c
-    src/stm/Src/system_stm32f7xx.c
+  src/stm/Src/stm32f7xx_hal_msp.c
+  src/stm/Src/stm32f7xx_it.c
+  src/stm/Src/system_stm32f7xx.c
 
-    src/stm/Inc/main.h
-    src/stm/Inc/stm32f7xx_hal_conf.h
-    src/stm/Inc/stm32f7xx_it.h)
+  src/stm/Inc/main.h
+  src/stm/Inc/stm32f7xx_hal_conf.h
+  src/stm/Inc/stm32f7xx_it.h)
 
 set(STM32CUBEF7_FILES
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.c)
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash_ex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma_ex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.c)
 
 set_source_files_properties(${STM32CUBEF7_FILES}
-    PROPERTIES
-    COMPILE_FLAGS -Wno-unused-parameter)
+  PROPERTIES
+  COMPILE_FLAGS -Wno-unused-parameter)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 add_executable(${EXECUTABLE} ${PROJECT_FILES}
-                             ${STM32CUBEMX_GENERATED_FILES}
-                             ${STM32CUBEF7_FILES})
+  ${STM32CUBEMX_GENERATED_FILES}
+  ${STM32CUBEF7_FILES})
+
+
+include("logging.cmake")
+include("logging_config.cmake" OPTIONAL)
+logging_set_filename(${EXECUTABLE})
 
 
 target_compile_definitions(${EXECUTABLE} PRIVATE
-    -DUSE_HAL_DRIVER
-    -DSTM32F746xx)
+  -DUSE_HAL_DRIVER
+  -DSTM32F746xx)
 
 target_include_directories(${EXECUTABLE} PRIVATE
-    src
-    src/stm/Inc
+  src
+  src/stm/Inc
 
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Inc
-    STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy
-    STM32CubeF7/Drivers/CMSIS/Device/ST/STM32F7xx/Include
-    STM32CubeF7/Drivers/CMSIS/Include)
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Inc
+  STM32CubeF7/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy
+  STM32CubeF7/Drivers/CMSIS/Device/ST/STM32F7xx/Include
+  STM32CubeF7/Drivers/CMSIS/Include)
 
 target_compile_options(${EXECUTABLE} PRIVATE
-    -mcpu=cortex-m7
-    -mthumb
-    -mfpu=fpv5-sp-d16
-    -mfloat-abi=hard
-    -fdata-sections
-    -ffunction-sections
+  -mcpu=cortex-m7
+  -mthumb
+  -mfpu=fpv5-sp-d16
+  -mfloat-abi=hard
+  -fdata-sections
+  -ffunction-sections
 
-    -Wall
-    -Werror
+  -Wall
+  -Werror
 
-    $<$<CONFIG:Debug>:-Og>)
+  $<$<CONFIG:Debug>:-Og>)
 
 target_link_options(${EXECUTABLE} PRIVATE
-    -T${CMAKE_SOURCE_DIR}/src/stm/STM32F746NGHx_FLASH.ld
+  -T${CMAKE_SOURCE_DIR}/src/stm/STM32F746NGHx_FLASH.ld
 
-    -mcpu=cortex-m7
-    -mthumb
-    -mfpu=fpv5-sp-d16
-    -mfloat-abi=hard
+  -mcpu=cortex-m7
+  -mthumb
+  -mfpu=fpv5-sp-d16
+  -mfloat-abi=hard
 
-    -specs=nano.specs
-    -specs=nosys.specs
-    -lc
-    -lm
-    -Wl,-Map=${PROJECT_NAME}.map,--cref
-    -Wl,--gc-sections
-    -Wl,--print-memory-usage)
-
-
-# Set up a compile-time define with each source file relative to the project
-# root directory (as opposed to the absolute file path in __FILE__).
-function(define_logging_filename target)
-  get_target_property(sources "${target}" SOURCES)
-  foreach(src ${sources})
-      string(REPLACE "${CMAKE_SOURCE_DIR}" "" logging_file "${src}")
-      set_property(SOURCE "${src}" APPEND PROPERTY
-                   COMPILE_DEFINITIONS "LOGGING_FILE=\"${logging_file}\"")
-  endforeach()
-endfunction()
-
-define_logging_filename(${EXECUTABLE})
+  -specs=nano.specs
+  -specs=nosys.specs
+  -lc
+  -lm
+  -Wl,-Map=${PROJECT_NAME}.map,--cref
+  -Wl,--gc-sections
+  -Wl,--print-memory-usage)
 
 
 add_custom_command(TARGET ${EXECUTABLE}
-    POST_BUILD
-    COMMAND arm-none-eabi-size ${EXECUTABLE})
+  POST_BUILD
+  COMMAND arm-none-eabi-size ${EXECUTABLE})
 
 add_custom_command(TARGET ${EXECUTABLE}
-    POST_BUILD
-    COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
-    COMMAND arm-none-eabi-objcopy -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+  POST_BUILD
+  COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
+  COMMAND arm-none-eabi-objcopy -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+
 
 set_target_properties(${EXECUTABLE} PROPERTIES ADDITIONAL_CLEAN_FILES
-    "${PROJECT_NAME}.bin;${PROJECT_NAME}.hex;${PROJECT_NAME}.map")
+  "${PROJECT_NAME}.bin;${PROJECT_NAME}.hex;${PROJECT_NAME}.map")

@@ -9,25 +9,8 @@
 static logging_init_args_t log;
 
 
-static logging_level_t
-get_level(const char *file)
-{
-    for (logging_config_t *ptr = log.config; ptr->file != NULL; ptr++)
-    {
-        /* There's no way to verify these strings are safe, so we'll have to
-         * just assume they are. The compiler's job is to keep everything const,
-         * and the logging is all set at compile-time. Don't make a bad config I
-         * guess! */
-        if (strstr(file, ptr->file) == NULL)
-            return ptr->level;
-    }
-
-    return log.default_level;
-}
-
-
 static const char *
-get_level_str(logging_level_t level)
+get_level_str(int level)
 {
     switch (level)
     {
@@ -60,7 +43,7 @@ logging_init(logging_init_args_t *init_args)
 
 
 void
-logging_log(logging_level_t level,
+logging_log(int level,
             const char *file, int line,
             const char *format, ...)
 {
@@ -72,13 +55,9 @@ logging_log(logging_level_t level,
     if (level <= LOG_LEVEL_NONE)
         return;
 
-    if (level > get_level(file))
-        return;
-
     /* Prepend our log format. */
     len = snprintf(buffer, sizeof(buffer), "%s %lu %s:%d ",
-                   get_level_str(level),
-                   log.get_time(), file, line);
+                   get_level_str(level), log.get_time(), file, line);
 
     va_start(args, format);
     vsnprintf(buffer + len, sizeof(buffer) - len, format, args);
