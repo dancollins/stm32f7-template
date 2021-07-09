@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
-project(hello_cmake)
+project(stm32f7-template)
 
 set(PROJECT_FILES
   src/main.c
